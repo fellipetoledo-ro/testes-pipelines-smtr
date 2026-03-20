@@ -1,0 +1,241 @@
+version: 2
+
+models:
+  - name: infracao
+    description: "Tabela histórica de todas as multas aplicadas aos modos de transporte no município do Rio de Janeiro, com qualquer situação [contém dados até 2025-03-31]"
+    tests:
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dbt_expectations.expect_table_aggregation_to_equal_other_table__infracao
+          expression: count(distinct data)
+          compare_model: ref('staging_infracao')
+          compare_expression: count(distinct data)
+          group_by: [data]
+          compare_group_by: [Date(data)]
+          row_condition: "DATE(data) between DATE('{{ modules.datetime.datetime.fromisoformat(var('date_range_start')) + modules.datetime.timedelta(7) }}') AND DATE('{{ modules.datetime.datetime.fromisoformat(var('date_range_end')) + modules.datetime.timedelta(8) }}')"
+          compare_row_condition: "DATE(data) between DATE('{{ modules.datetime.datetime.fromisoformat(var('date_range_start')) + modules.datetime.timedelta(7) }}') AND DATE('{{ modules.datetime.datetime.fromisoformat(var('date_range_end')) + modules.datetime.timedelta(8) }}')"
+          where: "DATE(data) between DATE('{{ modules.datetime.datetime.fromisoformat(var('date_range_start')) + modules.datetime.timedelta(7) }}') AND DATE('{{ modules.datetime.datetime.fromisoformat(var('date_range_end')) + modules.datetime.timedelta(8) }}')"
+    columns:
+      - name: data
+        description: "{{ doc('data_captura') }} [partição]"
+      - name: timestamp_captura
+        description: "{{ doc('timestamp_captura_infracao') }}"
+      - name: modo
+        description: "{{ doc('modo_onibus') }}"
+      - name: permissao
+        description: "{{ doc('permissao') }}"
+      - name: placa
+        description: "{{ doc('placa') }}"
+      - name: servico
+        description: "{{ doc('servico') }}"
+      - name: id_auto_infracao
+        description: "{{ doc('id_auto_infracao') }}"
+      - name: data_infracao
+        description: "{{ doc('data_infracao') }}"
+      - name: valor
+        description: "{{ doc('valor') }}"
+      - name: id_infracao
+        description: "{{ doc('id_infracao') }}"
+      - name: infracao
+        description: "{{ doc('infracao') }}"
+      - name: status
+        description: "{{ doc('status_veiculo_infracao') }}"
+      - name: data_pagamento
+        description: "{{ doc('data_pagamento') }}"
+      - name: datetime_ultima_atualizacao
+        description: "{{ doc('datetime_ultima_atualizacao') }}"
+      - name: versao
+        description: "{{ doc('versao') }}"
+  - name: licenciamento
+    description: "Tabela histórica de dados cadastrais dos veículos que operam o sistema de transporte rodoviário,
+                  considerando tanto os licenciados no Sistema de Transporte Urbano [STU] quanto as solicitações
+                  válidas em andamento para ingresso no sistema [contém dados até 2025-03-31]"
+    columns:
+      - name: data
+        description: "{{ doc('data_captura') }} [partição]"
+      - name: modo
+        description: "{{ doc('modo') }}"
+      - name: id_veiculo
+        description: "{{ doc('id_veiculo') }}"
+      - name: ano_fabricacao
+        description: "{{ doc('ano_fabricacao') }} [chassi]"
+      - name: carroceria
+        description: "{{ doc('carroceria') }}"
+      - name: data_ultima_vistoria
+        description: "{{ doc('data_ultima_vistoria') }}"
+      - name: id_carroceria
+        description: "{{ doc('id_carroceria') }}"
+      - name: id_chassi
+        description: "{{ doc('id_chassi') }}"
+      - name: id_fabricante_chassi
+        description: "{{ doc('id_fabricante_chassi') }}"
+      - name: id_interno_carroceria
+        description: "{{ doc('id_interno_carroceria') }}"
+      - name: id_planta
+        description: "{{ doc('id_planta') }}"
+      - name: indicador_ar_condicionado
+        description: "{{ doc('indicador_ar_condicionado') }}"
+      - name: indicador_elevador
+        description: "{{ doc('indicador_elevador') }}"
+      - name: indicador_usb
+        description: "{{ doc('indicador_usb') }}"
+      - name: indicador_wifi
+        description: "{{ doc('indicador_wifi') }}"
+      - name: nome_chassi
+        description: "{{ doc('nome_chassi') }}"
+      - name: permissao
+        description: "{{ doc('permissao') }}"
+      - name: placa
+        description: "{{ doc('placa') }}"
+      - name: quantidade_lotacao_pe
+        description: "{{ doc('quantidade_lotacao_pe') }}"
+      - name: quantidade_lotacao_sentado
+        description: "{{ doc('quantidade_lotacao_sentado') }}"
+      - name: tipo_combustivel
+        description: "{{ doc('tipo_combustivel') }}"
+      - name: tipo_veiculo
+        description: "{{ doc('tipo_veiculo') }}"
+      - name: tecnologia
+        description: "{{ doc('tecnologia') }}"
+      - name: ano_ultima_vistoria_atualizado
+        description: "{{ doc('ano_ultima_vistoria_atualizado') }}"
+      - name: data_inicio_vinculo
+        description: "{{ doc('data_inicio_vinculo') }}"
+      - name: datetime_ultima_atualizacao
+        description: "{{ doc('datetime_ultima_atualizacao') }}"
+      - name: versao
+        description: "{{ doc('versao') }}"
+  - name: sppo_licenciamento_solicitacao
+    description: "Tabela histórica de dados cadastrais das solicitações em andamento para ingresso no Sistema de Transporte Urbano [STU]"
+    columns:
+      - name: data
+        description: "{{ doc('data_captura') }} [partição]"
+      - name: timestamp_captura
+        description: "{{ doc('timestamp_captura_licenciamento') }}"
+      - name: modo
+        description: "{{ doc('modo_onibus') }}"
+      - name: id_veiculo
+        description: "{{ doc('id_veiculo') }}"
+      - name: ano_fabricacao
+        description: "{{ doc('ano_fabricacao') }}"
+      - name: carroceria
+        description: "{{ doc('carroceria') }}"
+      - name: data_ultima_vistoria
+        description: "{{ doc('data_ultima_vistoria') }}"
+      - name: id_carroceria
+        description: "{{ doc('id_carroceria') }}"
+      - name: id_chassi
+        description: "{{ doc('id_chassi') }}"
+      - name: id_fabricante_chassi
+        description: "{{ doc('id_fabricante_chassi') }}"
+      - name: id_interno_carroceria
+        description: "{{ doc('id_interno_carroceria') }}"
+      - name: id_planta
+        description: "{{ doc('id_planta') }}"
+      - name: indicador_ar_condicionado
+        description: "{{ doc('indicador_ar_condicionado') }}"
+      - name: indicador_elevador
+        description: "{{ doc('indicador_elevador') }}"
+      - name: indicador_usb
+        description: "{{ doc('indicador_usb') }}"
+      - name: indicador_wifi
+        description: "{{ doc('indicador_wifi') }}"
+      - name: nome_chassi
+        description: "{{ doc('nome_chassi') }}"
+      - name: permissao
+        description: "{{ doc('permissao') }}"
+      - name: placa
+        description: "{{ doc('placa') }}"
+      - name: quantidade_lotacao_pe
+        description: "{{ doc('quantidade_lotacao_pe') }}"
+      - name: quantidade_lotacao_sentado
+        description: "{{ doc('quantidade_lotacao_sentado') }}"
+      - name: tipo_combustivel
+        description: "{{ doc('tipo_combustivel') }}"
+      - name: tipo_veiculo
+        description: "{{ doc('tipo_veiculo') }}"
+      - name: status
+        description: "{{ doc('status') }}"
+      - name: solicitacao
+        description: "Inclusão - Solicitação de ingresso de veículo no STU\n
+                      Baixa - Solicitação de baixa de veículo já incluído no STU\n
+                      Renumeração - Solicitação de alteração de número de ordem de veículo já incluído no STU"
+  - name: sppo_veiculo_dia
+    description: "Tabela resumo dos veículos que operaram no SPPO e seus respectivos indicadores [contém dados até 2025-03-31]"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+          - data
+          - id_veiculo
+          name: dbt_utils.unique_combination_of_columns__data_id_veiculo__sppo_veiculo_dia
+      - dbt_expectations.expect_row_values_to_have_data_for_every_n_datepart:
+          date_col: data
+          row_condition: "1=1"
+          test_start_date: "{{ var('date_range_start') }}"
+          test_end_date: "{{ modules.datetime.datetime.fromisoformat(var('date_range_end')) + modules.datetime.timedelta(days=1) }}"
+          exclusion_condition: |
+            date_day < date('{{ var("data_final_veiculo_arquitetura_1") }}')
+          name: dbt_expectations.expect_row_values_to_have_data_for_every_n_datepart__sppo_veiculo_dia
+    columns:
+      - name: data
+        description: "{{ doc('data_operacao') }}"
+      - name: id_veiculo
+        description: "{{ doc('id_veiculo') }}"
+        tests:
+          - not_null:
+              name: not_null__id_veiculo__sppo_veiculo_dia
+      - name: placa
+        description: "{{ doc('placa') }}"
+      - name: indicadores
+        description: "{{ doc('indicadores_veiculo') }}"
+      - name: indicadores.indicador_licenciado
+        description: "{{ doc('indicador_licenciado') }}"
+      - name: indicadores.indicador_ar_condicionado
+        description: "{{ doc('indicador_ar_condicionado') }}"
+      - name: indicadores.indicador_autuacao_ar_condicionado
+        description: "{{  doc('indicador_autuacao_ar_condicionado') }}"
+      - name: indicadores.indicador_autuacao_seguranca
+        description: "{{ doc('indicador_autuacao_seguranca') }}"
+      - name: indicadores.indicador_autuacao_limpeza
+        description: "{{ doc('indicador_autuacao_limpeza') }}"
+      - name: indicadores.indicador_autuacao_equipamento
+        description: "{{ doc('indicador_autuacao_equipamento') }}"
+      - name: indicadores.indicador_sensor_temperatura
+        description: "{{  doc('indicador_sensor_temperatura') }}"
+      - name: indicadores.indicador_validador_sbd
+        description: "{{ doc('indicador_validador_sbd') }}"
+      - name: status
+        description: "{{ doc('status_veiculo') }}"
+        tests:
+          - not_null:
+              name: not_null__status__sppo_veiculo_dia
+      - name: datetime_ultima_atualizacao
+        description: "{{ doc('datetime_ultima_atualizacao') }}"
+      - name: data_licenciamento
+        description: "Data do arquivo de licenciamento utilizado"
+      - name: data_infracao
+        description: "Data do arquivo de infrações utilizado"
+      - name: tecnologia
+        description: "{{ doc('tecnologia') }}"
+      - name: versao
+        description: "{{ doc('versao') }}"
+  - name: sppo_registro_agente_verao
+    description: "Tabela com registros de Agentes de Verão para fins de cálculo de subsídio nos termos da RESOLUÇÃO SMTR Nº 3.682/2024"
+    columns:
+      - name: data
+        description: "{{ doc('data_agente') }}"
+      - name: datetime_registro
+        description: "{{ doc('datetime_registro') }}"
+      - name: id_registro
+        description: "{{ doc('id_registro') }}"
+      - name: id_veiculo
+        description: "{{ doc('id_veiculo') }}"
+      - name: servico
+        description: "{{ doc('servico') }}"
+      - name: link_foto
+        description: "{{ doc('link_foto') }}"
+      - name: validacao
+        description: "{{ doc('validacao') }}"
+      - name: datetime_captura
+        description: "{{ doc('datetime_captura') }}"
+      - name: versao
+        description: "{{ doc('versao') }}"
